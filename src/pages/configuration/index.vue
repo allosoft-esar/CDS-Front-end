@@ -205,11 +205,19 @@ export default {
       this.$router.push("/configuration/add");
     },
     async getSourceList() {
-      const response = await this.$http({
-        method: "GET",
-        url: "http://localhost:3003/source",
-      });
-      this.sourceList = await response.data;
+      try {
+        const response = await this.$http({
+          method: "GET",
+          url: "http://localhost:3003/source",
+        });
+        this.sourceList = await response.data;
+      } catch (error) {
+        Swal.fire({
+          title: `Error: ${error.response.status} ${error.response.statusText}`,
+          icon: "error",
+          confirmButtonText: "ปิด",
+        });
+      }
     },
     removeSource(item) {
       Swal.fire({
@@ -222,6 +230,27 @@ export default {
         cancelButtonColor: "#e65d5d",
         confirmButtonText: "ตกลง",
         cancelButtonText: "ยกเลิก",
+      }).then(async (result) => {
+        if (result.value) {
+          try {
+            const sourceResponse = await this.$http({
+              method: "DELETE",
+              url: "http://localhost:3003/source/" + item._id,
+            });
+            const cdsResponse = await this.$http({
+              method: "DELETE",
+              url: "http://localhost:3003/CDS/delete/" + item.cds,
+            });
+            Swal.fire(`ลบข้อมูล : ${item.name} เสร็จสิ้น`, "", "success");
+            this.getSourceList();
+          } catch (error) {
+            Swal.fire({
+              title: `Error: ${error.response.status} ${error.response.statusText}`,
+              icon: "error",
+              confirmButtonText: "ปิด",
+            });
+          }
+        }
       });
     },
   },
