@@ -38,15 +38,30 @@
           <slot :name="getCollapseContent(index + 1)">
             <div class="md-layout">
               <div class="md-layout-item">
+                <label for="description" style="color: #3177ce"
+                  >Description</label
+                >
+                <p id="description" v-if="item.description">{{ item.description }}</p>
+                <p v-else>ไม่มีคำอธิบาย</p>
                 <label for="revision" style="color: #3177ce">Revision</label>
                 <table id="revision" style="width: 100%">
-                  <tr v-for="(data, i) in item.revision" :key="i">
-                    <td>
+                  <tr>
+                    <th class="md-table-head"></th>
+                    <th class="md-table-head">วันที่นำเข้าข้อมูล</th>
+                  </tr>
+                  <tr
+                    v-for="(data, i) in item.revision"
+                    :key="i"
+                    class="md-table-row"
+                  >
+                    <td class="md-table-cell">
                       <center>
                         <md-radio v-model="revision" :value="data" />
                       </center>
                     </td>
-                    <td style="width: 90%">{{ data.label }}</td>
+                    <td style="width: 90%" class="md-table-cell">
+                      {{ data.label }}
+                    </td>
                   </tr>
                 </table>
               </div>
@@ -91,7 +106,7 @@ export default {
     };
   },
   mounted() {
-    this.toggle()
+    this.toggle();
   },
   methods: {
     copyToClipboard(element) {
