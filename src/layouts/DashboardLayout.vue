@@ -83,7 +83,8 @@
           <router-view></router-view>
         </zoom-center-transition>
       </div>
-      <content-footer v-if="!$route.meta.hideFooter"></content-footer>
+      <!-- <content-footer v-if="!$route.meta.hideFooter"></content-footer> -->
+      <content-footer v-show="false"></content-footer>
     </div>
   </div>
 </template>
