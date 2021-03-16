@@ -39,6 +39,7 @@
 
 <script>
 import Collapse from "./Collapse";
+import Swal from "sweetalert2";
 export default {
   components: { Collapse },
   data() {
@@ -50,14 +51,27 @@ export default {
   mounted() {},
   methods: {
     async searchCDS() {
-      if (this.keyword) {
-        const response = await this.$http({
-          method: "POST",
-          url: "http://localhost:3003/cds/search",
-          data: { name: this.keyword },
+      try {
+        if (this.keyword) {
+          const response = await this.$http({
+            method: "POST",
+            url: "http://localhost:3003/cds/search",
+            data: { name: this.keyword },
+          });
+          if (response.data.length > 0) {
+            this.cdsList = await response.data;
+          } else {
+            throw "ไม่พบข้อมูล";
+          }
+        } else {
+          throw "กรุณากรอกชื่อชุดข้อมูล";
+        }
+      } catch (text) {
+        Swal.fire({
+          title: text,
+          icon: "error",
+          confirmButtonText: "ปิด",
         });
-        this.cdsList = await response.data;
-      } else {
         this.cdsList = [];
       }
     },
